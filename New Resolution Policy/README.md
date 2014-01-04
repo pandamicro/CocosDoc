@@ -53,7 +53,7 @@ Check if the page is on full screen mode: `cc.Screen.getInstance().fullScreen();
 	
 Exit full screen mode: `cc.Screen.getInstance().exitFullScreen();`
 
-4. ###The benefit
+####4. The benefit
 
 The benefit in using resolution policy is obvious, you can ignore all varieties of browser and device size. And even more important, you don't need to scale everything in your game manually, everything is occupied by Cocos2d-HTML5. Imagine if you setup the designed resolution size to 320 * 480, you should always focus on this size in your game logic code. The right top corner of your game will always be (320, 480).
 
@@ -160,7 +160,8 @@ Extend the container strategy:
 >
 	var MyContainerStg = cc.ContainerStrategy.extend({
        	init: function (view) {
-           	// This function is called once cocos2d-html5 initiated, you can remove this function if you don't need any initialization
+           	// This function is called once cocos2d-html5 initiated, 
+           	// you can remove this function if you don't need any initialization
        	},
 >
        	apply: function (view, designedResolution) {
