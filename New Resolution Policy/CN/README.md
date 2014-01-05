@@ -4,10 +4,10 @@
 
 作为WEB开发者，相信大家都经历过跨平台多分辨率适配的痛。对于如何将网页的内容适配到不同尺寸的浏览器窗口，Responsive Design是目前非常热门的解决方案。可惜它不适用于Canvas中的游戏内容，所以Cocos2d-HTML5为游戏开发者提供了Resolution Policy解决方案。现在，在最新的2.2.2版本中，我们对它进行了重构，将它从Cocos2d-x的移植，变成了现在这样更适合网页游戏开发者的独特Resolution Policy解决方案。
 
-![Bad](bad.jpg)
+![Bad](../bad.jpg)
 这样的结果肯定不是我们想看到的...
 
-![Good](good.jpg)
+![Good](../good.jpg)
 这才像话，不过你也许也不满意，因为两条讨厌的白边，不用着急，我们也有你想要的。
 
 现在就来看看使用新的Resolution Policy有多简单。
@@ -90,25 +90,25 @@ All resolution policies are combined with a container strategy and a content str
 
 ####1. SHOW_ALL (PROPORTION_TO_FRAME + SHOW_ALL)
 
-![ShowAll](ShowAll.jpeg)
+![ShowAll](../ShowAll.jpeg)
 
 Show all policy will scale up the container to the maximum size in the frame which shows all your content on screen with the original width/height ratio you have set.
 
 ####2. NO_BORDER (EQUAL_TO_FRAME + NO_BORDER)
 
-![NoBorder](NoBorder.jpeg)
+![NoBorder](../NoBorder.jpeg)
 
 No border policy will scale proportionally the container so that it fills up the entire frame. In this case, if the width/height ratio of the frame doesn't equal to your designed ratio, some area of your game will be cut off.
 
 ####3. EXACT_FIT (EQUAL_TO_FRAME + EXACT_FIT)
 
-![ExactFit](ExactFit.jpeg)
+![ExactFit](../ExactFit.jpeg)
 
 Exact fit policy will scale the container to fit exactly the frame, so your game's w/h ratio will probably lost.
 
 ####4. FIXED_WIDTH (EQUAL_TO_FRAME + FIXED_WIDTH)
 
-![FixedWidth](FixedWidth.jpg)
+![FixedWidth](../FixedWidth.jpg)
 
 Fixed width policy will scale the width of the container to fit the frame's width, and the height will be scaled proportionally.
 
@@ -116,7 +116,7 @@ Pay attention to the position of viewport corners, it's different from the show 
 
 ####5. FIXED_HEIGHT (EQUAL_TO_FRAME + FIXED_HEIGHT)
 
-![FixedHeight](FixedHeight.jpeg)
+![FixedHeight](../FixedHeight.jpeg)
 
 Fixed height policy will scale the height of the container to fit the frame's height, and the width will be scaled proportionally.
 
