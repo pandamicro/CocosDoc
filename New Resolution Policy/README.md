@@ -57,6 +57,12 @@ Exit full screen mode: `cc.Screen.getInstance().exitFullScreen();`
 
 The benefit in using resolution policy is obvious, you can ignore all varieties of browser and device size. And even more important, you don't need to scale everything in your game manually, everything is occupied by Cocos2d-HTML5. Imagine if you setup the designed resolution size to 320 * 480, you should always focus on this size in your game logic code. The right top corner of your game will always be (320, 480).
 
+####5. API Changes
+
+* `_adjustSizeToBrowser` function in cc.EGLView has been deprecated.
+* `_resizeWithBrowserSize` function in cc.EGLView has been refactored to `resizeWithBrowserSize`.
+* The new way to set the resolution policy and the callback of resize event haven't been binded to JSB, so pay attention if you want to use JSB.
+
 
 ##Principles
 
