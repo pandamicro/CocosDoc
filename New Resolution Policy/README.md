@@ -97,7 +97,7 @@ All resolution policies are combined with a container strategy and a content str
 
 ![ShowAll](ShowAll.jpeg)
 
-Show all policy will scale up the container to the maximum size in the frame which shows all your content on screen with the original width/height ratio you have set.
+Show all policy will scale up the container to the maximum size in the frame which shows all your content on screen with the original width/height ratio you have set. So there will be some blank area in one axe.
 
 ####2. NO_BORDER (EQUAL_TO_FRAME + NO_BORDER)
 

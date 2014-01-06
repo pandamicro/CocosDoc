@@ -56,129 +56,127 @@ Cocos2d-HTML5在移动端浏览器中会尝试自动进入全屏幕来给用户�
 
 ##重要概念
 
-####1. 游戏外框
+####1. 游戏外框 Frame
 
 游戏外框是你的游戏Canvas元素的初始父节点，一般情况下，它是html文档的`body`元素。但是如果你愿意，它可以是DOM结构中的任意容器节点。如果这个外框是`body`元素或者你设置了外框节点的大小，那么Canvas元素的初始大小就不重要了，屏幕适配过程中它会被自动放缩来适应外框大小。
 再次提醒，如果你希望游戏窗口适应整个浏览器窗口，那么只需要将Canvas元素直接放在`body`下。
 
-####2. 游戏容器
+####2. 游戏容器 Container
 
 在Cocos2d-HTML5的初始化进程中，引擎会自动将你的Canvas元素放置到一个DIV容器中，而这个容器会被加入到Canvas的原始父节点（游戏外框）中。这个游戏容器是实现屏幕适配方案的重要辅助元素，你可以通过`cc.container`来访问它。
 
-####3. 游戏世界
+####3. 游戏世界 Content
 
 游戏世界代表游戏内使用的世界坐标系。
 
-####4. 视窗
+####4. 视窗 Viewport
 
 视窗是游戏Canvas元素的边界在游戏世界坐标系中的坐标及大小.
 
-####5. 容器适配策略
+####5. 容器适配策略 Container Strategy
 
 容器适配策略负责对游戏容器和游戏Canvas元素进行放缩以适应游戏外框。
 
-####6. 内容适配策略
+####6. 内容适配策略 Content Strategy
 
 内容适配策略负责将游戏世界放缩以适应游戏容器，同时也会计算并设置视窗。
 
 
-##Predefined policies
+##系统预设适配模式
 
-Now I will introduce all five predefined policies, in each captured image, the red rects are the game's content corner, and the green ones are the corners of the viewport of your game: which equals to the canvas.
+在Cocos2d-HTML5 2.2.2中预设了5种适配模式，继承自2.2.1版本并使用新的架构重写，下面将图解每种适配模式的行为。图中红色方框指示的是游戏世界的边界，而绿色方框指示的是视窗的边界，也就是Canvas元素的边界。
 
-All resolution policies are combined with a container strategy and a content strategy, the combination of each policy is shown in the brackets.
+所有适配模式都是由一个容器适配策略搭配一个内容适配策略所组成的，括号中显示的是每个模式的构成方式。
 
 ####1. SHOW_ALL (PROPORTION_TO_FRAME + SHOW_ALL)
 
 ![ShowAll](../ShowAll.jpeg)
 
-Show all policy will scale up the container to the maximum size in the frame which shows all your content on screen with the original width/height ratio you have set.
+SHOW_ALL模式会尽可能按原始宽高比放大游戏世界以适配外框(Frame)，同时使得游戏内容全部可见，所以浏览器宽高比不同于游戏宽高比时，窗口中会有一定的留白。
 
 ####2. NO_BORDER (EQUAL_TO_FRAME + NO_BORDER)
 
 ![NoBorder](../NoBorder.jpeg)
 
-No border policy will scale proportionally the container so that it fills up the entire frame. In this case, if the width/height ratio of the frame doesn't equal to your designed ratio, some area of your game will be cut off.
+NO_BORDER模式会尽可能按原始宽高比放大游戏世界以适配外框，并且保证不留空白。所以浏览器宽高比不同于游戏宽高比时，游戏世界会被部分切割。
 
 ####3. EXACT_FIT (EQUAL_TO_FRAME + EXACT_FIT)
 
 ![ExactFit](../ExactFit.jpeg)
 
-Exact fit policy will scale the container to fit exactly the frame, so your game's w/h ratio will probably lost.
+EXACT_FIT模式会忽略原始宽高比放大游戏世界以完全适应外框，所以浏览器宽高比不同于游戏宽高比时，游戏世界会被一定程度拉伸。
 
 ####4. FIXED_WIDTH (EQUAL_TO_FRAME + FIXED_WIDTH)
 
 ![FixedWidth](../FixedWidth.jpg)
 
-Fixed width policy will scale the width of the container to fit the frame's width, and the height will be scaled proportionally.
+FIXED_WIDTH模式会横向放大游戏世界以适应外框的宽度，纵向按原始宽高比放大。结果有两种可能，类似与SHOW_ALL模式的结果（如图），或者等同于NO_BORDER模式。
 
-Pay attention to the position of viewport corners, it's different from the show all policy.
+注意图中情况下与SHOW_ALL模式的区别，此时视窗大小是整个外框大小，所以可显示内容区域实际上比SHOW_ALL模式更多。
 
 ####5. FIXED_HEIGHT (EQUAL_TO_FRAME + FIXED_HEIGHT)
 
 ![FixedHeight](../FixedHeight.jpeg)
 
-Fixed height policy will scale the height of the container to fit the frame's height, and the width will be scaled proportionally.
+与前一个模式相反，FIXED_HEIGHT模式会纵向放大游戏世界以适应外框的高度，横向按原始宽高比放大。结果同上。
 
-In the case of our caption, the game width is larger than the game height, so the FIXED_WIDTH policy act like SHOW_ALL, and the FIXED_HEIGHT policy act like NO_BORDER. On the contrary, if the game width is smaller than the game height, the FIXED_WIDTH policy will act like NO_BORDER, and the FIXED_HEIGHT policy will act like SHOW_ALL.
+##开发者自定义适配模式
 
-##Customized resolution policy
+####1. 用系统预设策略来构建适配模式
 
-####1. Combien predefined strategies
+如你所看到的，所有预设模式都是预设策略的组合，你也可以做到同样的事情，系统预设策略如下所示：
 
-As you can see, the predefined policies just uses the combination of predefined strategies, you can do the same thing also. The predefined strategies are listed below:
+- Container strategies: 容器适配策略
+	- cc.ContainerStrategy.EQUAL_TO_FRAME: 使容器大小等同于外框
+	- cc.ContainerStrategy.PROPORTION_TO_FRAME: 使容器大小按原始宽高比放大以适应外框
+	- cc.ContainerStrategy.ORIGINAL_CONTAINER: 原始容器大小
 
-- Container strategies
-	- cc.ContainerStrategy.EQUAL_TO_FRAME
-	- cc.ContainerStrategy.PROPORTION_TO_FRAME
-	- cc.ContainerStrategy.ORIGINAL_CONTAINER
-
-- Content strategies
+- Content strategies 内容适配策略
 	- cc.ContentStrategy.SHOW_ALL
 	- cc.ContentStrategy.NO_BORDER
 	- cc.ContentStrategy.EXACT_FIT
 	- cc.ContentStrategy.FIXED_WIDTH
 	- cc.ContentStrategy.FIXED_HEIGHT
 
-To construct and use a resolution policy with strategies, you should do the following:
+要构建一个自定义适配模式，只需要使用下面的示例代码：
 >
 	var policy = new cc.ResolutionPolicy(cc.ContainerStrategy.PROPORTION_TO_FRAME, cc.ContentStrategy.EXACT_FIT);
 	cc.EGLView.getInstance().setDesignResolutionSize(320, 480, policy);
 
-This policy should work exact like the show all policy.
+上面这个示例的适配模式将与SHOW_ALL模式的表现完全相同。
 
-####2. Implement your own strategy
+####2. 实现自己的容器/内容适配策略
 
-If you are not satisfied with our predefined strategies, you can even implement your own strategy to fit whatever you need.
+如果你不满足于系统预设的适配策略，你甚至可以实现自己的策略来满足你的任何需求。
 
-Extend the container strategy:
+继承容器适配策略的方法：
 >
 	var MyContainerStg = cc.ContainerStrategy.extend({
 		init: function (view) {
-			// This function is called once cocos2d-html5 initiated, 
-			// you can remove this function if you don't need any initialization
+			// 这个函数将在Cocos2d-HTML5引擎初始化完成后被调用，
+			// 如果你的策略不需要初始化，可以去除这个函数。
 		},
 >
 		apply: function (view, designedResolution) {
-			// Apply process
+			// 适配过程
 		}
 	});
 
-Extend the content strategy
+继承内容适配策略的方法：
 >
 	var MyContentStg = cc.ContentStrategy.extend({
 		apply: function (view, designedResolution) {
 			var containerW = cc.canvas.width, containerH = cc.canvas.height;
 >			
-			// The process to calculate the content size, the x axe scale and the y axe scale
+			// 计算游戏世界大小，以及相对于设计分辨率的x轴比例和y轴比例
 >
 			return this._buildResult(containerW, containerH, contentW, contentH, scaleX, scaleY);
 		}
 	});
 
-At last, you should construct your own policy with your custom strategies.
+最后，你就可以使用自定义策略来构建一个适配模式：
 >
 	var policy = new cc.ResolutionPolicy(new MyContainerStg(), new MyContentStg());
 	cc.EGLView.getInstance().setDesignResolutionSize(320, 480, policy);
 
-If you want more details of the new resolution policy implementation, you can refer to the source code of CCEGLView.js or our [github repository](https://github.com/cocos2d/cocos2d-html5/blob/develop/cocos2d/core/platform/CCEGLView.js)
+如果你想了解更多关于新的屏幕适配策略，你可以查看2.2.2版本中CCEGLView.js的源码 [github repository](https://github.com/cocos2d/cocos2d-html5/blob/develop/cocos2d/core/platform/CCEGLView.js)
