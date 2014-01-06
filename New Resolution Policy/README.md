@@ -1,8 +1,8 @@
-#New Resolution Policy Design for Cocos2d-HTML5
+#New Resolution Policy Design for Cocos2d-html5
 
 ##Background
 
-As we all know as web developer, it's really hard to provide good experience cross browser and cross platform. A main issue about this is the dynamic adaptation of our content in browser windows with different size. There is things like responsive design for web pages, so for developers of Cocos2d-HTML5, we have brought you the new resolution policy design in version 2.2.2
+As we all know as web developer, it's really hard to provide good experience cross browser and cross platform. A main issue about this is the dynamic adaptation of our content in browser windows with different size. There is things like responsive design for web pages, so for developers of Cocos2d-html5, we have brought you the new resolution policy design in version 2.2.2
 
 The main quest of the resolution policy is to adapt your game canvas to fit the browser window.
 
@@ -18,14 +18,14 @@ Let's go straight forward to see how simple it is to use our new features.
 
 ####1. Set the policy
 
-To let Cocos2d-HTML5 adapt your game automatically to the browser, you just need to use this line of code while or after the `applicationDidFinishLaunching` method( main.js ) has been called:
+To let Cocos2d-html5 adapt your game automatically to the browser, you just need to use this line of code while or after the `applicationDidFinishLaunching` method( main.js ) has been called:
 
 >
 	cc.EGLView.getInstance().setDesignResolutionSize(320, 480, cc.RESOLUTION_POLICY.SHOW_ALL);`
 
 The first and second parameters are the resolution you want to use in your game codes. And the third parameter is the resolution policy you want to use. There are 5 predefined policies, each has it's own behavior. See details after.
 
-Pretty different with cocos2d-x, HTML5 version runs in browser, so except game window you may have other content to show along with the canvas. Or you may need to apply styles on your canvas and don't expect it to take all the space on screen. So our resolution policy adapt to the canvas's outer container by default. If you want to adapt to the browser window, you need to put your game canvas directly in body:
+Pretty different with cocos2d-x, html5 version runs in browser, so except game window you may have other content to show along with the canvas. Or you may need to apply styles on your canvas and don't expect it to take all the space on screen. So our resolution policy adapt to the canvas's outer container by default. If you want to adapt to the browser window, you need to put your game canvas directly in body:
 
 >
 	<body>
@@ -43,7 +43,7 @@ The new design allows automatic re-adaptation to browser while browser size chan
 
 [Fullscreen API](https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Using_full_screen_mode) is a new Web API that allows web content to be presented with the entire screen.
 
-Cocos2d-HTML5 will try to activate the full screen mode on mobile browsers so that user can have better experience. (Note that not every browser allow this behavior)
+Cocos2d-html5 will try to activate the full screen mode on mobile browsers so that user can have better experience. (Note that not every browser allow this behavior)
 
 On the other hand, modern desktop browsers also support Full Screen API, if you want to do that, simply use the following:
 
@@ -55,7 +55,7 @@ Exit full screen mode: `cc.Screen.getInstance().exitFullScreen();`
 
 ####4. The benefit
 
-The benefit in using resolution policy is obvious, you can ignore all varieties of browser and device size. And even more important, you don't need to scale everything in your game manually, everything is occupied by Cocos2d-HTML5. Imagine if you setup the designed resolution size to 320 * 480, you should always focus on this size in your game logic code. The right top corner of your game will always be (320, 480).
+The benefit in using resolution policy is obvious, you can ignore all varieties of browser and device size. And even more important, you don't need to scale everything in your game manually, everything is occupied by Cocos2d-html5. Imagine if you setup the designed resolution size to 320 * 480, you should always focus on this size in your game logic code. The right top corner of your game will always be (320, 480).
 
 ####5. API Changes
 
