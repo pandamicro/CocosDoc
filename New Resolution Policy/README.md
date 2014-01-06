@@ -21,9 +21,14 @@ Let's go straight forward to see how simple it is to use our new features.
 To let Cocos2d-html5 adapt your game automatically to the browser, you just need to use this line of code while or after the `applicationDidFinishLaunching` method( main.js ) has been called:
 
 >
-	cc.EGLView.getInstance().setDesignResolutionSize(320, 480, cc.RESOLUTION_POLICY.SHOW_ALL);`
+	cc.EGLView.getInstance().setDesignResolutionSize(320, 480, cc.RESOLUTION_POLICY.SHOW_ALL);
 
 The first and second parameters are the resolution you want to use in your game codes. And the third parameter is the resolution policy you want to use. There are 5 predefined policies, each has it's own behavior. See details after.
+
+If you have already set your design resolution, you can simply change your resolution policy by using this function:
+
+>
+	cc.EGLView.getInstance().setResolutionPolicy(cc.RESOLUTION_POLICY.NO_BORDER);
 
 Pretty different with cocos2d-x, html5 version runs in browser, so except game window you may have other content to show along with the canvas. Or you may need to apply styles on your canvas and don't expect it to take all the space on screen. So our resolution policy adapt to the canvas's outer container by default. If you want to adapt to the browser window, you need to put your game canvas directly in body:
 
@@ -38,6 +43,14 @@ The new design allows automatic re-adaptation to browser while browser size chan
 
 >
 	cc.EGLView.getInstance().resizeWithBrowserSize(true);
+	
+For permitting a more flexible design, we provided a new function in cc.EGLView, you can observe the resize event by setting a callback function with `setResizeCallback`:
+
+>
+	cc.EGLView.getInstance().setResizeCallback(function() {
+		// Do things according to your need, 
+		// e.g. change a resolution policy when user's mobile orientation changed.
+	});
 
 ####3. Fullscreen API
 
@@ -59,6 +72,8 @@ The benefit in using resolution policy is obvious, you can ignore all varieties 
 
 ####5. API Changes
 
+* Resolution policy setter function `setResolutionPolicy` has been added to cc.EGLView.
+* A function for registration of resize event callback `setResizeCallback` has been added to cc.EGLView.
 * `_adjustSizeToBrowser` function in cc.EGLView has been deprecated.
 * `_resizeWithBrowserSize` function in cc.EGLView has been refactored to `resizeWithBrowserSize`.
 * The new way to set the resolution policy and the callback of resize event haven't been binded to JSB, so pay attention if you want to use JSB.

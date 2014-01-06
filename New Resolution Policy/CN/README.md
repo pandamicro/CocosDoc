@@ -19,9 +19,14 @@
 好吧，其实你什么也不用做，沿用之前版本的Resolution Policy设置代码就可以了。如果你还没有用过Resolution Policy，只需要在游戏载入过程完成之后（`applicationDidFinishLaunching`方法中或者之后），调用下面的代码：
 
 >
-	cc.EGLView.getInstance().setDesignResolutionSize(320, 480, cc.RESOLUTION_POLICY.SHOW_ALL);`
+	cc.EGLView.getInstance().setDesignResolutionSize(320, 480, cc.RESOLUTION_POLICY.SHOW_ALL);
 
 `setDesignResolutionSize`函数的前两个参数是你想要在你的代码中使用的游戏分辨率，第三个参数就是你选择的适配方案。引擎中内置了5种适配方案，每种都有自己独特的行为，详见下文。
+
+如果你已经设置了设计分辨率，那么你可以直接设置你的Resolution Policy：
+
+>
+	cc.EGLView.getInstance().setResolutionPolicy(cc.RESOLUTION_POLICY.NO_BORDER);
 
 2.2.2版中的重构主要是基于WEB端游戏与原生游戏的区别所设计。原生游戏中游戏总是使用全部屏幕空间，但是在WEB端你的网页中也许除了游戏还有别的视觉或文字元素，或者也许你需要给你的游戏设计一个漂亮的边框。所以Cocos2d-html5引擎的适配方案会默认适配游戏Canvas元素的父节点，如果你希望游戏场景适配浏览器屏幕，那么只需要将Canvas直接放置到body下就可以了：
 
@@ -36,6 +41,14 @@
 
 >
 	cc.EGLView.getInstance().resizeWithBrowserSize(true);
+
+为了更灵活得应对变化，我们为cc.EGLView提供了一个新的函数，你可以通过`setResizeCallback`函数注册一个回调函数来监听浏览器窗口大小变化事件：
+
+>
+	cc.EGLView.getInstance().setResizeCallback(function() {
+		// 做任何你所需要的游戏内容层面的适配操作
+		// 比如说，你可以针对用户的移动设备方向来决定所要应用的适配模式
+	});
 
 ####3. Fullscreen API
 
@@ -55,8 +68,10 @@ Cocos2d-html5在移动端浏览器中会尝试自动进入全屏幕来给用户�
 
 ####5. API的变化
 
-* cc.ELGView的`_adjustSizeToBrowser`函数被弃用，在下一个稳定版本中将会被删除。
-* cc.ELGView的`_resizeWithBrowserSize`被重命名为`resizeWithBrowserSize`。
+* cc.EGLView加入了`setResolutionPolicy`函数，可以用来设置屏幕适配模式。
+* cc.EGLView加入了`setResizeCallback`函数来注册浏览器大小变化事件的回调函数。
+* cc.EGLView的`_adjustSizeToBrowser`函数被弃用，在下一个稳定版本中将会被删除。
+* cc.EGLView的`_resizeWithBrowserSize`被重命名为`resizeWithBrowserSize`。
 * 使用用户自定义适配模式以及窗口resize事件的回调函数尚未被绑定到JSB中，如果你需要使用JSB的话，可能会造成错误。
 
 
