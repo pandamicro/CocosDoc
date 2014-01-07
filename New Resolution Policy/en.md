@@ -6,10 +6,10 @@ As we all know as web developer, it's really hard to provide good experience cro
 
 The main quest of the resolution policy is to adapt your game canvas to fit the browser window.
 
-![Bad](bad.jpg)
+![Bad](./res/bad.jpg)
 When we see our game like this, it's really painful.
 
-![Good](good.jpg)
+![Good](./res/good.jpg)
 That's what we want, well, most of the time, somebody hate the white siders, we have other choices for you.
 
 Let's go straight forward to see how simple it is to use our new features.
@@ -110,43 +110,43 @@ The content strategy controls the behavior of how to scale the game world relati
 
 ##Predefined policies
 
-Now I will introduce all five predefined policies, in each captured image, the red rects are the game's content corner, and the green ones are the corners of the viewport of your game: which equals to the canvas.
+Now I will introduce all five predefined policies, in each captured image, the red rects are the game's content corner, and the green ones are the corners of the canvas.
 
 All resolution policies are combined with a container strategy and a content strategy, the combination of each policy is shown in the brackets.
 
 ####1. SHOW_ALL (PROPORTION_TO_FRAME + SHOW_ALL)
 
-![ShowAll](ShowAll.jpeg)
+![ShowAll](./res/ShowAll.jpeg)
 
 Show all policy will scale up the container to the maximum size in the frame which shows all your content on screen with the original width/height ratio you have set. So there will be some blank area in one axe.
 
 ####2. NO_BORDER (EQUAL_TO_FRAME + NO_BORDER)
 
-![NoBorder](NoBorder.jpeg)
+![NoBorder](./res/NoBorder.jpeg)
 
 No border policy will scale proportionally the container so that it fills up the entire frame. In this case, if the width/height ratio of the frame doesn't equal to your designed ratio, some area of your game will be cut off.
 
 ####3. EXACT_FIT (EQUAL_TO_FRAME + EXACT_FIT)
 
-![ExactFit](ExactFit.jpeg)
+![ExactFit](./res/ExactFit.jpeg)
 
 Exact fit policy will scale the container to fit exactly the frame, so your game's w/h ratio will probably lost.
 
 ####4. FIXED_WIDTH (EQUAL_TO_FRAME + FIXED_WIDTH)
 
-![FixedWidth](FixedWidth.jpg)
+![FixedWidth](./res/FixedWidth.jpeg)
 
 Fixed width policy will scale the width of the container to fit the frame's width, and the height will be scaled proportionally.
 
-Pay attention to the position of viewport corners, it's different from the show all policy.
+It may seem alike to the SHOW_ALL policy, but the canvas's rect fills up the whole frame, and game world's coordinate system equals the canvas coordinate system.
 
 ####5. FIXED_HEIGHT (EQUAL_TO_FRAME + FIXED_HEIGHT)
 
-![FixedHeight](FixedHeight.jpeg)
+![FixedHeight](./res/FixedHeight.jpeg)
 
 Fixed height policy will scale the height of the container to fit the frame's height, and the width will be scaled proportionally.
 
-In the case of our caption, the game width is larger than the game height, so the FIXED_WIDTH policy act like SHOW_ALL, and the FIXED_HEIGHT policy act like NO_BORDER. On the contrary, if the game width is smaller than the game height, the FIXED_WIDTH policy will act like NO_BORDER, and the FIXED_HEIGHT policy will act like SHOW_ALL.
+In the case of our caption, the game width is larger than the game height, so the FIXED_WIDTH policy act like SHOW_ALL, and the FIXED_HEIGHT policy act like NO_BORDER. On the contrary, if the game width is smaller than the game height, the FIXED_WIDTH policy will act like NO_BORDER, and the FIXED_HEIGHT policy will act like SHOW_ALL. But FIXED_HEIGHT and FIXED_WIDTH policies will all take the whole frame as the viewport and game world rect.
 
 ##Customized resolution policy
 
@@ -180,19 +180,29 @@ If you are not satisfied with our predefined strategies, you can even implement 
 Extend the container strategy:
 >
 	var MyContainerStg = cc.ContainerStrategy.extend({
-		init: function (view) {
-			// This function is called once cocos2d-html5 initiated, 
-			// you can remove this function if you don't need any initialization
+		preApply: function (view) {
+			// This function is called before the process of adaptation,
+			// you can remove this function if you don't need
 		},
 >
 		apply: function (view, designedResolution) {
 			// Apply process
 		}
+>
+		postApply: function (view) {
+			// This function is called after the process of adaptation,
+			// you can remove this function if you don't need
+		},
 	});
 
 Extend the content strategy
 >
 	var MyContentStg = cc.ContentStrategy.extend({
+		preApply: function (view) {
+			// This function is called before the process of adaptation,
+			// you can remove this function if you don't need
+		},
+>
 		apply: function (view, designedResolution) {
 			var containerW = cc.canvas.width, containerH = cc.canvas.height;
 >			
@@ -200,6 +210,11 @@ Extend the content strategy
 >
 			return this._buildResult(containerW, containerH, contentW, contentH, scaleX, scaleY);
 		}
+>
+		postApply: function (view) {
+			// This function is called after the process of adaptation,
+			// you can remove this function if you don't need
+		},
 	});
 
 At last, you should construct your own policy with your custom strategies.
